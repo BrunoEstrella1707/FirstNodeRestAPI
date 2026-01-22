@@ -57,13 +57,13 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({id: user.id},
             JWT_SECRET,
-            { expiresIn: '1m'}
+            { expiresIn: '10m'}
         )
 
-        res.status(200).json({access: token})
+        return res.status(200).json({access: token})
 
     } catch (e) {
-        res.status(400).json({message: `Invalid request ${e.message}`})
+        return res.status(400).json({message: `Invalid request ${e.message}`})
     }
 })
 
