@@ -60,11 +60,25 @@ router.post('/login', async (req, res) => {
             { expiresIn: '10m'}
         )
 
-        return res.status(200).json({access: token})
+        return res.cookie(
+            'access_token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'prd',
+                sameSite: 'strict',
+                maxAge: 10 * 60 * 1000
+            }
+        ).status(200).json({message: 'Login successful.'})
 
     } catch (e) {
         return res.status(400).json({message: `Invalid request ${e.message}`})
     }
 })
+
+
+router.post('/logout', (req, res) => {
+    res.clearCookie('access_token')
+    res.status(200).json({ message: 'Logged out' })
+})
+
 
 export default router
